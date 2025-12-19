@@ -1,8 +1,13 @@
-// public interface UserService {
+package com.example.demo.service;
 
-//     User registerUser(User user);
+import java.util.List;
+import com.example.demo.model.User;
 
-//     User getUser(Long id);
+public interface UserService {
 
-//     List<User> getAllUsers();
-// }
+    User registerUser(User user);
+
+    User getUser(Long id);
+
+    List<User> getAllUsers();
+}
