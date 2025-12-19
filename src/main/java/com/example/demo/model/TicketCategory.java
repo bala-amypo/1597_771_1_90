@@ -5,7 +5,7 @@
 
 // import java.time.LocalDateTime;
 
-/  / @Entity
+// @Entity
 // @Table(
 //     name = "ticket_category",
 //     uniqueConstraints = @UniqueConstraint(columnNames = "categoryName")
