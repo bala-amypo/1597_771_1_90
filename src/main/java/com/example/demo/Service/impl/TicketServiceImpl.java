@@ -1,10 +1,15 @@
-// public interface TicketService {
+package com.example.demo.service;
 
-//     Ticket createTicket(Long userId, Long categoryId, Ticket ticket);
+import java.util.List;
+import com.example.demo.model.Ticket;
 
-//     Ticket getTicket(Long ticketId);
+public interface TicketService {
 
-//     List<Ticket> getTicketsByUser(Long userId);
+    Ticket createTicket(Long userId, Long categoryId, Ticket ticket);
 
-//     List<Ticket> getAllTickets();
-// }
+    Ticket getTicket(Long ticketId);
+
+    List<Ticket> getTicketsByUser(Long userId);
+
+    List<Ticket> getAllTickets();
+}
