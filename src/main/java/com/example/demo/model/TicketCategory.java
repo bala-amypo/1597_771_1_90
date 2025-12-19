@@ -1,32 +1,34 @@
 // package com.example.demo.model;
 
-// import jakarta.persistence.*;
-// import jakarta.validation.constraints.NotBlank;
-
-// import java.time.LocalDateTime;
+// import jakarta.persistence.Entity;
+// import jakarta.persistence.GeneratedValue;
+// import jakarta.persistence.GenerationType;
+// import jakarta.persistence.Id;
 
 // @Entity
-// @Table(
-//     name = "ticket_category",
-//     uniqueConstraints = @UniqueConstraint(columnNames = "categoryName")
-// )
 // public class TicketCategory {
 
 //     @Id
 //     @GeneratedValue(strategy = GenerationType.IDENTITY)
 //     private Long id;
 
-//     @NotBlank
-//     private String categoryName;
+//     private String name;
 
-//     private String description;
+//     // -------- Getters & Setters --------
 
-//     private LocalDateTime createdAt;
-
-//     @PrePersist
-//     public void prePersist() {
-//         this.createdAt = LocalDateTime.now();
+//     public Long getId() {
+//         return id;
 //     }
 
-//     // getters and setters
+//     public void setId(Long id) {
+//         this.id = id;
+//     }
+
+//     public String getName() {
+//         return name;
+//     }
+
+//     public void setName(String name) {
+//         this.name = name;
+//     }
 // }
