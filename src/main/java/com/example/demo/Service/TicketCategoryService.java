@@ -1,8 +1,13 @@
-// public interface TicketCategoryService {
+package com.example.demo.service; // replace with your actual package
 
-//     TicketCategory createCategory(TicketCategory category);
+import java.util.List;
+import com.example.demo.model.TicketCategory; // replace with your actual model package
 
-//     List<TicketCategory> getAllCategories();
+public interface TicketCategoryService {
 
-//     TicketCategory getCategory(Long id);
-// }
+    TicketCategory createCategory(TicketCategory category);
+
+    List<TicketCategory> getAllCategories();
+
+    TicketCategory getCategory(Long id);
+}
