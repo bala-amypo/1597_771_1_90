@@ -1,10 +1,10 @@
-public interface TicketService {
+// public interface TicketService {
 
-    Ticket createTicket(Long userId, Long categoryId, Ticket ticket);
+//     Ticket createTicket(Long userId, Long categoryId, Ticket ticket);
 
-    Ticket getTicket(Long ticketId);
+//     Ticket getTicket(Long ticketId);
 
-    List<Ticket> getTicketsByUser(Long userId);
+//     List<Ticket> getTicketsByUser(Long userId);
 
-    List<Ticket> getAllTickets();
-}
+//     List<Ticket> getAllTickets();
+// }
