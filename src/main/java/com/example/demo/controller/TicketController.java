@@ -1,44 +1,42 @@
+package com.example.demo.controller;
+
 import java.util.List;
 
-import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-
-
+import com.example.demo.model.Ticket;
+import com.example.demo.service.TicketService;
 
 @RestController
-@RequestMapping("/api/tickets")
-@Tag(name = "Tickets", description = "Ticket management APIs")
-@RequiredArgsConstructor
+@RequestMapping("/tickets")
 public class TicketController {
 
-    private final TicketService ticketService;
+    private final TicketService service;
+
+    public TicketController(TicketService service) {
+        this.service = service;
+    }
 
     @PostMapping("/{userId}/{categoryId}")
-    public ResponseEntity<Ticket> createTicket(
+    public Ticket createTicket(
             @PathVariable Long userId,
             @PathVariable Long categoryId,
             @RequestBody Ticket ticket) {
+        return service.createTicket(userId, categoryId, ticket);
+    }
 
-        return ResponseEntity.ok(
-                ticketService.createTicket(userId, categoryId, ticket)
-        );
+    @GetMapping("/{ticketId}")
+    public Ticket getTicket(@PathVariable Long ticketId) {
+        return service.getTicket(ticketId);
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Ticket>> getByUser(@PathVariable Long userId) {
-        return ResponseEntity.ok(ticketService.getTicketsByUser(userId));
+    public List<Ticket> getByUser(@PathVariable Long userId) {
+        return service.getTicketsByUser(userId);
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<List<Ticket>> getAll() {
-        return ResponseEntity.ok(ticketService.getAllTickets());
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Ticket> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(ticketService.getTicket(id));
+    @GetMapping
+    public List<Ticket> getAll() {
+        return service.getAllTickets();
     }
 }
