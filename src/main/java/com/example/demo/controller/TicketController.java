@@ -1,42 +1,42 @@
-package com.example.demo.controller;
+// package com.example.demo.controller;
 
-import java.util.List;
+// import java.util.List;
 
-import org.springframework.web.bind.annotation.*;
+// import org.springframework.web.bind.annotation.*;
 
-import com.example.demo.model.Ticket;
-import com.example.demo.service.TicketService;
+// import com.example.demo.model.Ticket;
+// import com.example.demo.service.TicketService;
 
-@RestController
-@RequestMapping("/tickets")
-public class TicketController {
+// @RestController
+// @RequestMapping("/tickets")
+// public class TicketController {
 
-    private final TicketService service;
+//     private final TicketService service;
 
-    public TicketController(TicketService service) {
-        this.service = service;
-    }
+//     public TicketController(TicketService service) {
+//         this.service = service;
+//     }
 
-    @PostMapping("/{userId}/{categoryId}")
-    public Ticket createTicket(
-            @PathVariable Long userId,
-            @PathVariable Long categoryId,
-            @RequestBody Ticket ticket) {
-        return service.createTicket(userId, categoryId, ticket);
-    }
+//     @PostMapping("/{userId}/{categoryId}")
+//     public Ticket createTicket(
+//             @PathVariable Long userId,
+//             @PathVariable Long categoryId,
+//             @RequestBody Ticket ticket) {
+//         return service.createTicket(userId, categoryId, ticket);
+//     }
 
-    @GetMapping("/{ticketId}")
-    public Ticket getTicket(@PathVariable Long ticketId) {
-        return service.getTicket(ticketId);
-    }
+//     @GetMapping("/{ticketId}")
+//     public Ticket getTicket(@PathVariable Long ticketId) {
+//         return service.getTicket(ticketId);
+//     }
 
-    @GetMapping("/user/{userId}")
-    public List<Ticket> getByUser(@PathVariable Long userId) {
-        return service.getTicketsByUser(userId);
-    }
+//     @GetMapping("/user/{userId}")
+//     public List<Ticket> getByUser(@PathVariable Long userId) {
+//         return service.getTicketsByUser(userId);
+//     }
 
-    @GetMapping
-    public List<Ticket> getAll() {
-        return service.getAllTickets();
-    }
-}
+//     @GetMapping
+//     public List<Ticket> getAll() {
+//         return service.getAllTickets();
+//     }
+// }
