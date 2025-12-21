@@ -1,8 +1,8 @@
-// public interface DuplicateRuleService {
+public interface DuplicateRuleService {
 
-//     DuplicateRule createRule(DuplicateRule rule);
+    DuplicateRule createRule(DuplicateRule rule);
 
-//     List<DuplicateRule> getAllRules();
+    List<DuplicateRule> getAllRules();
 
-//     DuplicateRule getRule(Long id);
-// }
+    DuplicateRule getRule(Long id);
+}
