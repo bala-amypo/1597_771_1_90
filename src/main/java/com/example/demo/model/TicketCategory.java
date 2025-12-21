@@ -1,34 +1,72 @@
-// package com.example.demo.model;
+package com.example.demo.model;
 
-// import jakarta.persistence.Entity;
-// import jakarta.persistence.GeneratedValue;
-// import jakarta.persistence.GenerationType;
-// import jakarta.persistence.Id;
+import java.time.LocalDateTime;
+import java.util.List;
 
-// @Entity
-// public class TicketCategory {
+import jakarta.persistence.*;
 
-//     @Id
-//     @GeneratedValue(strategy = GenerationType.IDENTITY)
-//     private Long id;
+@Entity
+@Table(
+    name = "ticket_categories",
+    uniqueConstraints = @UniqueConstraint(columnNames = "category_name")
+)
+public class TicketCategory {
 
-//     private String name;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-//     // -------- Getters & Setters --------
+    @Column(name = "category_name", nullable = false, unique = true)
+    private String categoryName;
 
-//     public Long getId() {
-//         return id;
-//     }
+    @Column(length = 500)
+    private String description;
 
-//     public void setId(Long id) {
-//         this.id = id;
-//     }
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
 
-//     public String getName() {
-//         return name;
-//     }
+    // Inverse side of relationship
+    @OneToMany(mappedBy = "category")
+    private List<Ticket> tickets;
 
-//     public void setName(String name) {
-//         this.name = name;
-//     }
-// }
+    // No-arg constructor
+    public TicketCategory() {
+    }
+
+    // Parameterized constructor
+    public TicketCategory(String categoryName, String description) {
+        this.categoryName = categoryName;
+        this.description = description;
+    }
+
+    // Automatically set createdAt
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
+
+    // Getters and setters
+    public Long getId() {
+        return id;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+}
