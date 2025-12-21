@@ -1,8 +1,8 @@
-// package com.example.demo.repository;
+package com.example.demo.repository;
 
-// import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-// import com.example.demo.model.Ticket;
+import com.example.demo.model.Ticket;
 
-// public interface TicketRepository extends JpaRepository<Ticket, Long> {
-// }
+public interface TicketRepository extends JpaRepository<Ticket, Long> {
+}
