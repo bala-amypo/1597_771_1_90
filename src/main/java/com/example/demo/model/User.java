@@ -6,7 +6,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
@@ -31,14 +30,9 @@ public class User {
 
     private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "user")
-    private List<Ticket> tickets;
-
-    // No-arg constructor
     public User() {
     }
 
-    // Parameterized constructor
     public User(String fullName, String email, String password, String role) {
         this.fullName = fullName;
         this.email = email;
@@ -54,7 +48,7 @@ public class User {
         this.createdAt = LocalDateTime.now();
     }
 
-    // Getters and Setters
+    // getters & setters
 
     public Long getId() {
         return id;
@@ -64,12 +58,12 @@ public class User {
         return fullName;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public String getEmail() {
@@ -98,9 +92,5 @@ public class User {
     
     public LocalDateTime getCreatedAt() {
         return createdAt;
-    }
-    
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
     }
 }
