@@ -4,7 +4,7 @@ import com.example.demo.model.DuplicateRule;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
-
+@Repository
 public interface DuplicateRuleRepository extends JpaRepository<DuplicateRule, Long> {
 
     // Used to enforce uniqueness of ruleName
