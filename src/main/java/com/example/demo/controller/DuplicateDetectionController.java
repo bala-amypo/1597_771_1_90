@@ -1,56 +1,33 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.DuplicateDetectionLog;
-import com.example.demo.service.DuplicateDetectionService;
-import org.springframework.http.ResponseEntity;
+import com.example.demo.model.DuplicateRule;
+import com.example.demo.service.DuplicateRuleService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/detection")
+@RequestMapping("/duplicate-rules")
 public class DuplicateDetectionController {
 
-    private final DuplicateDetectionService duplicateDetectionService;
+    private final DuplicateRuleService ruleService;
 
-    // ✅ Constructor injection
-    public DuplicateDetectionController(DuplicateDetectionService duplicateDetectionService) {
-        this.duplicateDetectionService = duplicateDetectionService;
+    public DuplicateDetectionController(DuplicateRuleService ruleService) {
+        this.ruleService = ruleService;
     }
 
-    // =====================================================
-    // 1️⃣ Run duplicate detection for a ticket
-    // GET /api/detection/run/{ticketId}
-    // =====================================================
-    @GetMapping("/run/{ticketId}")
-    public ResponseEntity<List<DuplicateDetectionLog>> runDetection(
-            @PathVariable Long ticketId) {
-
-        List<DuplicateDetectionLog> logs =
-                duplicateDetectionService.detectDuplicates(ticketId);
-
-        return ResponseEntity.ok(logs);
+    @PostMapping
+    public DuplicateRule createRule(@RequestBody DuplicateRule rule) {
+        return ruleService.createRule(rule);
     }
 
-    // =====================================================
-    // 2️⃣ Get all logs for a ticket
-    // GET /api/detection/ticket/{ticketId}
-    // =====================================================
-    @GetMapping("/ticket/{ticketId}")
-    public ResponseEntity<List<DuplicateDetectionLog>> getLogsForTicket(
-            @PathVariable Long ticketId) {
-
-        return ResponseEntity.ok(
-                duplicateDetectionService.getLogsForTicket(ticketId)
-        );
+    @GetMapping
+    public List<DuplicateRule> getAllRules() {
+        return ruleService.getAllRules();
     }
 
-    // =====================================================
-    // 3️⃣ Get a single detection log by ID
-    // GET /api/detection/{id}
-    // =====================================================
     @GetMapping("/{id}")
-    public ResponseEntity<DuplicateDetectionLog> getLog(@PathVariable Long id) {
-        return ResponseEntity.ok(duplicateDetectionService.getLog(id));
+    public DuplicateRule getRule(@PathVariable Long id) {
+        return ruleService.getRule(id);
     }
 }

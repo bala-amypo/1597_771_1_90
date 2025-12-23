@@ -7,7 +7,6 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class DuplicateRuleServiceImpl implements DuplicateRuleService {
@@ -20,18 +19,14 @@ public class DuplicateRuleServiceImpl implements DuplicateRuleService {
 
     @Override
     public DuplicateRule createRule(DuplicateRule rule) {
-        // Check if rule name already exists
-        Optional<DuplicateRule> existing = ruleRepository.findByRuleName(rule.getRuleName());
-        if (existing.isPresent()) {
-            throw new IllegalArgumentException("Rule with name '" + rule.getRuleName() + "' already exists");
-        }
+        ruleRepository.findByRuleName(rule.getRuleName()).ifPresent(r -> {
+            throw new IllegalArgumentException("Rule already exists");
+        });
 
-        // Validate threshold between 0.0 and 1.0
         if (rule.getThreshold() < 0.0 || rule.getThreshold() > 1.0) {
             throw new IllegalArgumentException("Threshold must be between 0.0 and 1.0");
         }
 
-        // Save and return
         return ruleRepository.save(rule);
     }
 
