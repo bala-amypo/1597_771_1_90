@@ -3,10 +3,10 @@ package com.example.demo.service.impl;
 import com.example.demo.model.DuplicateDetectionLog;
 import com.example.demo.repository.DuplicateDetectionLogRepository;
 import com.example.demo.service.DuplicateDetectionService;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class DuplicateDetectionServiceImpl implements DuplicateDetectionService {
@@ -25,7 +25,7 @@ public class DuplicateDetectionServiceImpl implements DuplicateDetectionService 
     @Override
     public DuplicateDetectionLog getLog(Long id) {
         return logRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Log not found"));
+                .orElseThrow(() -> new RuntimeException("Log not found"));
     }
 
     @Override
@@ -33,21 +33,18 @@ public class DuplicateDetectionServiceImpl implements DuplicateDetectionService 
         return logRepository.findAll();
     }
 
+    @Override
+    public List<DuplicateDetectionLog> detectDuplicates(Long ticketId) {
+        // Example logic: filter logs for the given ticket
+        return logRepository.findAll().stream()
+                .filter(log -> log.getTicket() != null && log.getTicket().getId().equals(ticketId))
+                .collect(Collectors.toList());
+    }
 
     @Override
-public List<DuplicateDetectionLog> detectDuplicates(Long ticketId) {
-    // Example logic: return all logs for the ticket with some filtering
-    // Replace with your real duplicate detection logic
-    return logRepository.findAll().stream()
-            .filter(log -> log.getTicket() != null && log.getTicket().getId().equals(ticketId))
-            .toList();
-}
-
-@Override
-public List<DuplicateDetectionLog> getLogsForTicket(Long ticketId) {
-    return logRepository.findAll().stream()
-            .filter(log -> log.getTicket() != null && log.getTicket().getId().equals(ticketId))
-            .toList();
-}
-
+    public List<DuplicateDetectionLog> getLogsForTicket(Long ticketId) {
+        return logRepository.findAll().stream()
+                .filter(log -> log.getTicket() != null && log.getTicket().getId().equals(ticketId))
+                .collect(Collectors.toList());
+    }
 }
