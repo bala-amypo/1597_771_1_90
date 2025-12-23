@@ -1,49 +1,48 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.model.DuplicateDetectionLog;
-import com.example.demo.repository.DuplicateDetectionLogRepository;
-import com.example.demo.repository.TicketRepository;
-import com.example.demo.service.DuplicateDetectionService;
+import com.example.demo.model.DuplicateRule;
+import com.example.demo.repository.DuplicateRuleRepository;
+import com.example.demo.service.DuplicateRuleService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class DuplicateDetectionServiceImpl implements DuplicateDetectionService {
+public class DuplicateRuleServiceImpl implements DuplicateRuleService {
 
-    private final DuplicateDetectionLogRepository logRepository;
-    private final TicketRepository ticketRepository;
+    private final DuplicateRuleRepository ruleRepository;
 
-    // Constructor
-    public DuplicateDetectionServiceImpl(DuplicateDetectionLogRepository logRepository,
-                                         TicketRepository ticketRepository) {
-        this.logRepository = logRepository;
-        this.ticketRepository = ticketRepository;
+    public DuplicateRuleServiceImpl(DuplicateRuleRepository ruleRepository) {
+        this.ruleRepository = ruleRepository;
     }
 
     @Override
-    public DuplicateDetectionLog createLog(DuplicateDetectionLog log) {
-        return logRepository.save(log);
+    public DuplicateRule createRule(DuplicateRule rule) {
+        // Check if rule name already exists
+        Optional<DuplicateRule> existing = ruleRepository.findByRuleName(rule.getRuleName());
+        if (existing.isPresent()) {
+            throw new IllegalArgumentException("Rule with name '" + rule.getRuleName() + "' already exists");
+        }
+
+        // Validate threshold between 0.0 and 1.0
+        if (rule.getThreshold() < 0.0 || rule.getThreshold() > 1.0) {
+            throw new IllegalArgumentException("Threshold must be between 0.0 and 1.0");
+        }
+
+        // Save and return
+        return ruleRepository.save(rule);
     }
 
     @Override
-    public List<DuplicateDetectionLog> getAllLogs() {
-        return logRepository.findAll();
+    public List<DuplicateRule> getAllRules() {
+        return ruleRepository.findAll();
     }
 
     @Override
-    public Optional<DuplicateDetectionLog> getLog(Long id) {
-        return logRepository.findById(id);
-    }
-
-    @Override
-    public List<DuplicateDetectionLog> getLogsForTicket(Long ticketId) {
-        return logRepository.findByBaseTicket_Id(ticketId);
-    }
-
-    @Override
-    public void deleteLog(Long id) {
-        logRepository.deleteById(id);
+    public DuplicateRule getRule(Long id) {
+        return ruleRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Rule not found"));
     }
 }
