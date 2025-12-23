@@ -5,12 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(
-    name = "duplicate_rules",
-    uniqueConstraints = {
-        @UniqueConstraint(columnNames = "rule_name")
-    }
-)
+@Table(name = "duplicate_rules")
 public class DuplicateRule {
 
     @Id
