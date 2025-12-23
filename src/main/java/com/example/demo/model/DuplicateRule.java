@@ -25,17 +25,12 @@ public class DuplicateRule {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    // One-to-many relationship with DuplicateDetectionLog
-    @OneToMany(mappedBy = "rule")
-    private List<DuplicateDetectionLog> detectionLogs;
+    
 
-    // ================= CONSTRUCTORS =================
-
-    // No-arg constructor
+    
     public DuplicateRule() {
     }
 
-    // Parameterized constructor (just assigns fields)
     public DuplicateRule(String ruleName, String matchType, Double threshold) {
         this.ruleName = ruleName;
         this.matchType = matchType;
