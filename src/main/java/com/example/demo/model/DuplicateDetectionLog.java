@@ -1,14 +1,18 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-@Table(name = "duplicate_detection_logs")
 
 @Entity
+@Table(name = "duplicate_detection_logs")
 public class DuplicateDetectionLog {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "rule_id)
+    private DuplicateRule rule;   // ✅ ADD THIS
 
     @ManyToOne
     @JoinColumn(name = "base_ticket_id")
@@ -20,8 +24,12 @@ public class DuplicateDetectionLog {
 
     private String reason;
 
+    // getters & setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
+
+    public DuplicateRule getRule() { return rule; }
+    public void setRule(DuplicateRule rule) { this.rule = rule; }
 
     public Ticket getBaseTicket() { return baseTicket; }
     public void setBaseTicket(Ticket baseTicket) { this.baseTicket = baseTicket; }
