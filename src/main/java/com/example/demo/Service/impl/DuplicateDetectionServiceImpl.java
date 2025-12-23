@@ -11,7 +11,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class DuplicateDetectionServiceImpl implements DuplicateDetectionLogService {
+public class DuplicateDetectionServiceImpl implements DuplicateDetectionService {
 
     private final DuplicateDetectionLogRepository logRepository;
 
@@ -21,12 +21,16 @@ public class DuplicateDetectionServiceImpl implements DuplicateDetectionLogServi
             Ticket baseTicket = log.getBaseTicket();
             Ticket matchedTicket = log.getMatchedTicket();
 
-            // Example logic: print ticket IDs
+            // Example logic
             System.out.println("Base Ticket ID: " + baseTicket.getId());
             System.out.println("Matched Ticket ID: " + matchedTicket.getId());
 
-            // Save log if needed
             logRepository.save(log);
         }
+    }
+
+    @Override
+    public List<DuplicateDetectionLog> getLogsForTicket(Long ticketId) {
+        return logRepository.findByTicketId(ticketId);
     }
 }
