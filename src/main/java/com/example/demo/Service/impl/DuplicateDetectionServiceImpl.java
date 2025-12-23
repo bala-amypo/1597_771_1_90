@@ -11,7 +11,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class DuplicateDetectionServiceImpl implements DuplicateDetectionService {
+public class DuplicateDetectionServiceImpl implements DuplicateDetectionLogService {
 
     private final DuplicateDetectionLogRepository logRepository;
 
