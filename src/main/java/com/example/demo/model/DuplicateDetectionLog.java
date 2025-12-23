@@ -11,6 +11,13 @@ public class DuplicateDetectionLog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // ================= RELATION TO RULE (FIX) =================
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "rule_id", nullable = false)
+    private DuplicateRule rule;
+
+    // ================= TICKETS =================
+
     // Base ticket
     @ManyToOne(optional = false)
     @JoinColumn(name = "ticket_id", nullable = false)
@@ -21,6 +28,8 @@ public class DuplicateDetectionLog {
     @JoinColumn(name = "matched_ticket_id", nullable = false)
     private Ticket matchedTicket;
 
+    // ================= FIELDS =================
+
     @Column(nullable = false)
     private Double matchScore;
 
@@ -29,12 +38,16 @@ public class DuplicateDetectionLog {
 
     // ================= CONSTRUCTORS =================
 
-    // No-arg constructor
     public DuplicateDetectionLog() {
     }
 
-    // Parameterized constructor (just assigns fields)
-    public DuplicateDetectionLog(Ticket ticket, Ticket matchedTicket, Double matchScore) {
+    public DuplicateDetectionLog(
+            DuplicateRule rule,
+            Ticket ticket,
+            Ticket matchedTicket,
+            Double matchScore
+    ) {
+        this.rule = rule;
         this.ticket = ticket;
         this.matchedTicket = matchedTicket;
         this.matchScore = matchScore;
@@ -51,6 +64,14 @@ public class DuplicateDetectionLog {
 
     public Long getId() {
         return id;
+    }
+
+    public DuplicateRule getRule() {
+        return rule;
+    }
+
+    public void setRule(DuplicateRule rule) {
+        this.rule = rule;
     }
 
     public Ticket getTicket() {
