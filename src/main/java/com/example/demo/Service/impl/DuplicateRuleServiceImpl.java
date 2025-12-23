@@ -1,52 +1,49 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.exception.NotFoundException;
-import com.example.demo.model.DuplicateRule;
-import com.example.demo.repository.DuplicateRuleRepository;
-import com.example.demo.service.DuplicateRuleService;
+import com.example.demo.model.DuplicateDetectionLog;
+import com.example.demo.repository.DuplicateDetectionLogRepository;
+import com.example.demo.repository.TicketRepository;
+import com.example.demo.service.DuplicateDetectionService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
-public class DuplicateRuleServiceImpl implements DuplicateRuleService {
+public class DuplicateDetectionServiceImpl implements DuplicateDetectionService {
 
-    private final DuplicateRuleRepository ruleRepository;
+    private final DuplicateDetectionLogRepository logRepository;
+    private final TicketRepository ticketRepository;
 
-    // ✅ Constructor injection
-    public DuplicateRuleServiceImpl(DuplicateRuleRepository ruleRepository) {
-        this.ruleRepository = ruleRepository;
+    // Constructor
+    public DuplicateDetectionServiceImpl(DuplicateDetectionLogRepository logRepository,
+                                         TicketRepository ticketRepository) {
+        this.logRepository = logRepository;
+        this.ticketRepository = ticketRepository;
     }
 
-    // ================= CREATE RULE =================
     @Override
-    public DuplicateRule createRule(DuplicateRule rule) {
-
-        // 🔴 Check unique rule name
-        if (ruleRepository.findByRuleName(rule.getRuleName()).isPresent()) {
-            throw new IllegalArgumentException("Rule already exists");
-        }
-
-        // 🔴 Threshold validation [0.0, 1.0]
-        Double threshold = rule.getThreshold();
-        if (threshold == null || threshold < 0.0 || threshold > 1.0) {
-            throw new IllegalArgumentException("Threshold must be between 0.0 and 1.0");
-        }
-
-        // ✅ Save and return
-        return ruleRepository.save(rule);
+    public DuplicateDetectionLog createLog(DuplicateDetectionLog log) {
+        return logRepository.save(log);
     }
 
-    // ================= GET ALL RULES =================
     @Override
-    public List<DuplicateRule> getAllRules() {
-        return ruleRepository.findAll();
+    public List<DuplicateDetectionLog> getAllLogs() {
+        return logRepository.findAll();
     }
 
-    // ================= GET RULE BY ID =================
     @Override
-    public DuplicateRule getRule(Long id) {
-        return ruleRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Rule not found"));
+    public Optional<DuplicateDetectionLog> getLog(Long id) {
+        return logRepository.findById(id);
+    }
+
+    @Override
+    public List<DuplicateDetectionLog> getLogsForTicket(Long ticketId) {
+        return logRepository.findByBaseTicket_Id(ticketId);
+    }
+
+    @Override
+    public void deleteLog(Long id) {
+        logRepository.deleteById(id);
     }
 }
