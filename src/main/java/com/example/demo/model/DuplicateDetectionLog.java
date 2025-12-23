@@ -21,7 +21,7 @@ public class DuplicateDetectionLog {
     // Base ticket
     @ManyToOne(optional = false)
     @JoinColumn(name = "ticket_id", nullable = false)
-    private Ticket ticket;
+    private Ticket BaseTicket;
 
     // Matched (duplicate) ticket
     @ManyToOne(optional = false)
