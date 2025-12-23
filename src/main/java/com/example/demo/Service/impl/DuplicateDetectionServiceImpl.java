@@ -21,7 +21,6 @@ public class DuplicateDetectionServiceImpl implements DuplicateDetectionService 
             Ticket baseTicket = log.getBaseTicket();
             Ticket matchedTicket = log.getMatchedTicket();
 
-            // Example logic
             System.out.println("Base Ticket ID: " + baseTicket.getId());
             System.out.println("Matched Ticket ID: " + matchedTicket.getId());
 
@@ -32,5 +31,12 @@ public class DuplicateDetectionServiceImpl implements DuplicateDetectionService 
     @Override
     public List<DuplicateDetectionLog> getLogsForTicket(Long ticketId) {
         return logRepository.findByTicketId(ticketId);
+    }
+
+    @Override
+    public void detectDuplicates(Long ticketId) {
+        // TODO: add duplicate detection logic
+        // Example placeholder
+        System.out.println("Detecting duplicates for ticket: " + ticketId);
     }
 }
