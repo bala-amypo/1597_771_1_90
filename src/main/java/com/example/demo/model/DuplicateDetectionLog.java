@@ -11,25 +11,22 @@ public class DuplicateDetectionLog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // ================= RELATION TO RULE (FIX) =================
+    // ================= RULE =================
     @ManyToOne(optional = false)
     @JoinColumn(name = "rule_id", nullable = false)
     private DuplicateRule rule;
 
-    // ================= TICKETS =================
-
-    // Base ticket
+    // ================= BASE TICKET =================
     @ManyToOne(optional = false)
     @JoinColumn(name = "ticket_id", nullable = false)
-    private Ticket BaseTicket;
+    private Ticket ticket;
 
-    // Matched (duplicate) ticket
+    // ================= MATCHED TICKET =================
     @ManyToOne(optional = false)
     @JoinColumn(name = "matched_ticket_id", nullable = false)
     private Ticket matchedTicket;
 
     // ================= FIELDS =================
-
     @Column(nullable = false)
     private Double matchScore;
 
@@ -37,7 +34,6 @@ public class DuplicateDetectionLog {
     private LocalDateTime detectedAt;
 
     // ================= CONSTRUCTORS =================
-
     public DuplicateDetectionLog() {
     }
 
@@ -53,15 +49,13 @@ public class DuplicateDetectionLog {
         this.matchScore = matchScore;
     }
 
-    // ================= LIFECYCLE CALLBACK =================
-
+    // ================= LIFECYCLE =================
     @PrePersist
     protected void onDetect() {
         this.detectedAt = LocalDateTime.now();
     }
 
     // ================= GETTERS & SETTERS =================
-
     public Long getId() {
         return id;
     }
