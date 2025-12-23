@@ -1,9 +1,9 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+@Table(name = "duplicate_detection_logs")
 
 @Entity
-@Table(name = "duplicate_detection_logs")
 public class DuplicateDetectionLog {
 
     @Id

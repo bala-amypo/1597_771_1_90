@@ -2,21 +2,18 @@ package com.example.demo.model;
 
 import jakarta.persistence.*;
 import java.util.List;
+@Table(name = "duplicate_rules")
 
 @Entity
-@Table(name = "duplicate_rules")
 public class DuplicateRule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String ruleName;
-
-    private double threshold;
-
     @OneToMany(mappedBy = "rule", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<DuplicateDetectionLog> detectionLogs; // <-- matches field 'rule' in DuplicateDetectionLog
+    private List<DuplicateDetectionLog> detectionLogs;
+}
 
     public DuplicateRule() {}
 
