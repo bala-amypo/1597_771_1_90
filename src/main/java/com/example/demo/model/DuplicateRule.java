@@ -1,8 +1,6 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -13,80 +11,29 @@ public class DuplicateRule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "rule_name", nullable = false, unique = true)
     private String ruleName;
 
-    @Column(name = "match_type", nullable = false)
-    private String matchType;
-    // KEYWORD, SIMILARITY, EXACT_MATCH
+    private double threshold;
 
-    @Column(nullable = false)
-    private Double threshold;
-
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
-
-    // ================= FIX: ADD THIS FIELD =================
     @OneToMany(mappedBy = "rule", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<DuplicateDetectionLog> detectionLogs = new ArrayList<>();
+    private List<DuplicateDetectionLog> detectionLogs; // <-- matches field 'rule' in DuplicateDetectionLog
 
-    // ================= CONSTRUCTORS =================
+    public DuplicateRule() {}
 
-    public DuplicateRule() {
-    }
-
-    public DuplicateRule(String ruleName, String matchType, Double threshold) {
+    public DuplicateRule(String ruleName, double threshold) {
         this.ruleName = ruleName;
-        this.matchType = matchType;
         this.threshold = threshold;
     }
 
-    // ================= LIFECYCLE CALLBACK =================
+    // Getters & Setters
+    public Long getId() { return id; }
 
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-    }
+    public String getRuleName() { return ruleName; }
+    public void setRuleName(String ruleName) { this.ruleName = ruleName; }
 
-    // ================= GETTERS & SETTERS =================
+    public double getThreshold() { return threshold; }
+    public void setThreshold(double threshold) { this.threshold = threshold; }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getRuleName() {
-        return ruleName;
-    }
-
-    public void setRuleName(String ruleName) {
-        this.ruleName = ruleName;
-    }
-
-    public String getMatchType() {
-        return matchType;
-    }
-
-    public void setMatchType(String matchType) {
-        this.matchType = matchType;
-    }
-
-    public Double getThreshold() {
-        return threshold;
-    }
-
-    public void setThreshold(Double threshold) {
-        this.threshold = threshold;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public List<DuplicateDetectionLog> getDetectionLogs() {
-        return detectionLogs;
-    }
-
-    public void setDetectionLogs(List<DuplicateDetectionLog> detectionLogs) {
-        this.detectionLogs = detectionLogs;
-    }
+    public List<DuplicateDetectionLog> getDetectionLogs() { return detectionLogs; }
+    public void setDetectionLogs(List<DuplicateDetectionLog> detectionLogs) { this.detectionLogs = detectionLogs; }
 }

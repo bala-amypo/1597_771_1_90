@@ -11,48 +11,41 @@ public class DuplicateDetectionLog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ticket_id", nullable = false)
-    private Ticket ticket; // Make sure Ticket is imported
+    private Ticket ticket;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "rule_id", nullable = false)
+    private DuplicateRule rule;  // <-- Must exactly match mappedBy in DuplicateRule
 
     private String message;
 
     private LocalDateTime createdAt;
 
-    public DuplicateDetectionLog() {
-    }
+    // No-args constructor
+    public DuplicateDetectionLog() {}
 
-    public DuplicateDetectionLog(Ticket ticket, String message, LocalDateTime createdAt) {
+    // All-args constructor
+    public DuplicateDetectionLog(Ticket ticket, DuplicateRule rule, String message, LocalDateTime createdAt) {
         this.ticket = ticket;
+        this.rule = rule;
         this.message = message;
         this.createdAt = createdAt;
     }
 
-    public Long getId() {
-        return id;
-    }
+    // Getters & Setters
+    public Long getId() { return id; }
 
-    public Ticket getTicket() {
-        return ticket;
-    }
+    public Ticket getTicket() { return ticket; }
+    public void setTicket(Ticket ticket) { this.ticket = ticket; }
 
-    public void setTicket(Ticket ticket) {
-        this.ticket = ticket;
-    }
+    public DuplicateRule getRule() { return rule; }
+    public void setRule(DuplicateRule rule) { this.rule = rule; }
 
-    public String getMessage() {
-        return message;
-    }
+    public String getMessage() { return message; }
+    public void setMessage(String message) { this.message = message; }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 }
