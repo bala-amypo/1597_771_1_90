@@ -16,10 +16,10 @@ public class DuplicateDetectionLog {
     @JoinColumn(name = "rule_id", nullable = false)
     private DuplicateRule rule;
 
-    // ================= BASE TICKET =================
+    // ================= BASE TICKET (FIXED NAME) =================
     @ManyToOne(optional = false)
     @JoinColumn(name = "ticket_id", nullable = false)
-    private Ticket ticket;
+    private Ticket baseTicket;
 
     // ================= MATCHED TICKET =================
     @ManyToOne(optional = false)
@@ -34,22 +34,20 @@ public class DuplicateDetectionLog {
     private LocalDateTime detectedAt;
 
     // ================= CONSTRUCTORS =================
-    public DuplicateDetectionLog() {
-    }
+    public DuplicateDetectionLog() {}
 
     public DuplicateDetectionLog(
             DuplicateRule rule,
-            Ticket ticket,
+            Ticket baseTicket,
             Ticket matchedTicket,
             Double matchScore
     ) {
         this.rule = rule;
-        this.ticket = ticket;
+        this.baseTicket = baseTicket;
         this.matchedTicket = matchedTicket;
         this.matchScore = matchScore;
     }
 
-    // ================= LIFECYCLE =================
     @PrePersist
     protected void onDetect() {
         this.detectedAt = LocalDateTime.now();
@@ -68,12 +66,12 @@ public class DuplicateDetectionLog {
         this.rule = rule;
     }
 
-    public Ticket getTicket() {
-        return ticket;
+    public Ticket getBaseTicket() {
+        return baseTicket;
     }
 
-    public void setTicket(Ticket ticket) {
-        this.ticket = ticket;
+    public void setBaseTicket(Ticket baseTicket) {
+        this.baseTicket = baseTicket;
     }
 
     public Ticket getMatchedTicket() {
