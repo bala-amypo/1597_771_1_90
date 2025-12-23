@@ -1,7 +1,6 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "duplicate_detection_logs")
@@ -11,47 +10,49 @@ public class DuplicateDetectionLog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
+    // --- Base ticket (the original ticket) ---
     @ManyToOne
-@JoinColumn(name = "base_ticket_id") // match your DB column
-private Ticket baseTicket;
+    @JoinColumn(name = "base_ticket_id")
+    private Ticket baseTicket;
 
+    // --- Matched ticket (the duplicate ticket) ---
+    @ManyToOne
+    @JoinColumn(name = "matched_ticket_id")
+    private Ticket matchedTicket;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ticket_id", nullable = false)
-    private Ticket ticket;
+    private String reason; // optional, e.g., why it’s considered duplicate
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "rule_id", nullable = false)
-    private DuplicateRule rule;  // <-- Must exactly match mappedBy in DuplicateRule
+    // getters and setters
 
-    private String message;
-
-    private LocalDateTime createdAt;
-
-    // No-args constructor
-    public DuplicateDetectionLog() {}
-
-    // All-args constructor
-    public DuplicateDetectionLog(Ticket ticket, DuplicateRule rule, String message, LocalDateTime createdAt) {
-        this.ticket = ticket;
-        this.rule = rule;
-        this.message = message;
-        this.createdAt = createdAt;
+    public Long getId() {
+        return id;
     }
 
-    // Getters & Setters
-    public Long getId() { return id; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public Ticket getTicket() { return ticket; }
-    public void setTicket(Ticket ticket) { this.ticket = ticket; }
+    public Ticket getBaseTicket() {
+        return baseTicket;
+    }
 
-    public DuplicateRule getRule() { return rule; }
-    public void setRule(DuplicateRule rule) { this.rule = rule; }
+    public void setBaseTicket(Ticket baseTicket) {
+        this.baseTicket = baseTicket;
+    }
 
-    public String getMessage() { return message; }
-    public void setMessage(String message) { this.message = message; }
+    public Ticket getMatchedTicket() {
+        return matchedTicket;
+    }
 
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public void setMatchedTicket(Ticket matchedTicket) {
+        this.matchedTicket = matchedTicket;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
 }
