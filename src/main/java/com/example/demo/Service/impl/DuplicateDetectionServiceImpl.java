@@ -32,4 +32,22 @@ public class DuplicateDetectionServiceImpl implements DuplicateDetectionService 
     public List<DuplicateDetectionLog> getAllLogs() {
         return logRepository.findAll();
     }
+
+
+    @Override
+public List<DuplicateDetectionLog> detectDuplicates(Long ticketId) {
+    // Example logic: return all logs for the ticket with some filtering
+    // Replace with your real duplicate detection logic
+    return logRepository.findAll().stream()
+            .filter(log -> log.getTicket() != null && log.getTicket().getId().equals(ticketId))
+            .toList();
+}
+
+@Override
+public List<DuplicateDetectionLog> getLogsForTicket(Long ticketId) {
+    return logRepository.findAll().stream()
+            .filter(log -> log.getTicket() != null && log.getTicket().getId().equals(ticketId))
+            .toList();
+}
+
 }
