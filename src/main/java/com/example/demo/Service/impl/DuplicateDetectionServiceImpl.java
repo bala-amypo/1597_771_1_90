@@ -37,8 +37,6 @@ public List<DuplicateDetectionLog> getLogsForTicket(Long ticketId) {
 
     @Override
     public void detectDuplicates(Long ticketId) {
-        // TODO: add duplicate detection logic
-        // Example placeholder
         System.out.println("Detecting duplicates for ticket: " + ticketId);
     }
 }
