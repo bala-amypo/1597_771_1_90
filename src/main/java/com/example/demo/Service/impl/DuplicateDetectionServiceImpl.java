@@ -1,5 +1,4 @@
 package com.example.demo.service.impl;
-import com.example.demo.util.TextSimilarityUtil;
 
 import com.example.demo.model.*;
 import com.example.demo.repository.DuplicateDetectionLogRepository;
@@ -18,7 +17,7 @@ public class DuplicateDetectionServiceImpl implements DuplicateDetectionService 
     private final DuplicateRuleRepository ruleRepository;
     private final DuplicateDetectionLogRepository logRepository;
 
-    // ✅ Constructor injection
+    // Constructor injection
     public DuplicateDetectionServiceImpl(
             TicketRepository ticketRepository,
             DuplicateRuleRepository ruleRepository,
@@ -45,7 +44,7 @@ public class DuplicateDetectionServiceImpl implements DuplicateDetectionService 
 
         for (Ticket candidate : openTickets) {
 
-            // ❌ Do not compare ticket with itself
+            // Do not compare ticket with itself
             if (candidate.getId().equals(baseTicket.getId())) {
                 continue;
             }
@@ -84,7 +83,13 @@ public class DuplicateDetectionServiceImpl implements DuplicateDetectionService 
                 // ===== SAVE LOG IF DUPLICATE FOUND =====
                 if (score != null) {
                     DuplicateDetectionLog log =
-                            new DuplicateDetectionLog(baseTicket, candidate, score);
+                            new DuplicateDetectionLog(
+                                    rule,          // ✅ FIX: pass rule
+                                    baseTicket,
+                                    candidate,
+                                    score
+                            );
+
                     createdLogs.add(logRepository.save(log));
                 }
             }
@@ -106,7 +111,7 @@ public class DuplicateDetectionServiceImpl implements DuplicateDetectionService 
                 .orElseThrow(() -> new RuntimeException("Log not found"));
     }
 
-    // ================= HELPER METHOD =================
+    // ================= HELPER METHODS =================
     private double keywordOverlapScore(Ticket t1, Ticket t2) {
 
         Set<String> words1 = extractWords(t1.getSubject(), t1.getDescription());
