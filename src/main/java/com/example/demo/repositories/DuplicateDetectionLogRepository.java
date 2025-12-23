@@ -8,6 +8,5 @@ import java.util.List;
 public interface DuplicateDetectionLogRepository
         extends JpaRepository<DuplicateDetectionLog, Long> {
 
-    // Returns all logs for a given base ticket
-    List<DuplicateDetectionLog> findByTicket_Id(Long id);
+     List<DuplicateDetectionLog> findByBaseTicket_Id(Long baseTicketId);
 }
