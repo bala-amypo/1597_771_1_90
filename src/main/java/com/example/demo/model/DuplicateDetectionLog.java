@@ -11,8 +11,8 @@ public class DuplicateDetectionLog {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "rule_id)
-    private DuplicateRule rule;   // ✅ ADD THIS
+    @JoinColumn(name = "rule_id")
+    private DuplicateRule rule;
 
     @ManyToOne
     @JoinColumn(name = "base_ticket_id")
@@ -24,19 +24,44 @@ public class DuplicateDetectionLog {
 
     private String reason;
 
-    // getters & setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    // Getters & Setters
+    public Long getId() {
+        return id;
+    }
 
-    public DuplicateRule getRule() { return rule; }
-    public void setRule(DuplicateRule rule) { this.rule = rule; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public Ticket getBaseTicket() { return baseTicket; }
-    public void setBaseTicket(Ticket baseTicket) { this.baseTicket = baseTicket; }
+    public DuplicateRule getRule() {
+        return rule;
+    }
 
-    public Ticket getMatchedTicket() { return matchedTicket; }
-    public void setMatchedTicket(Ticket matchedTicket) { this.matchedTicket = matchedTicket; }
+    public void setRule(DuplicateRule rule) {
+        this.rule = rule;
+    }
 
-    public String getReason() { return reason; }
-    public void setReason(String reason) { this.reason = reason; }
+    public Ticket getBaseTicket() {
+        return baseTicket;
+    }
+
+    public void setBaseTicket(Ticket baseTicket) {
+        this.baseTicket = baseTicket;
+    }
+
+    public Ticket getMatchedTicket() {
+        return matchedTicket;
+    }
+
+    public void setMatchedTicket(Ticket matchedTicket) {
+        this.matchedTicket = matchedTicket;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
 }
