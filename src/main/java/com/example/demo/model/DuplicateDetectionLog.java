@@ -11,86 +11,48 @@ public class DuplicateDetectionLog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // ================= RULE =================
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "rule_id", nullable = false)
-    private DuplicateRule rule;
-
-    // ================= BASE TICKET (FIXED NAME) =================
-    @ManyToOne(optional = false)
+    @ManyToOne
     @JoinColumn(name = "ticket_id", nullable = false)
-    private Ticket baseTicket;
+    private Ticket ticket; // Make sure Ticket is imported
 
-    // ================= MATCHED TICKET =================
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "matched_ticket_id", nullable = false)
-    private Ticket matchedTicket;
+    private String message;
 
-    // ================= FIELDS =================
-    @Column(nullable = false)
-    private Double matchScore;
+    private LocalDateTime createdAt;
 
-    @Column(name = "detected_at", nullable = false)
-    private LocalDateTime detectedAt;
-
-    // ================= CONSTRUCTORS =================
-    public DuplicateDetectionLog() {}
-
-    public DuplicateDetectionLog(
-            DuplicateRule rule,
-            Ticket baseTicket,
-            Ticket matchedTicket,
-            Double matchScore
-    ) {
-        this.rule = rule;
-        this.baseTicket = baseTicket;
-        this.matchedTicket = matchedTicket;
-        this.matchScore = matchScore;
+    public DuplicateDetectionLog() {
     }
 
-    @PrePersist
-    protected void onDetect() {
-        this.detectedAt = LocalDateTime.now();
+    public DuplicateDetectionLog(Ticket ticket, String message, LocalDateTime createdAt) {
+        this.ticket = ticket;
+        this.message = message;
+        this.createdAt = createdAt;
     }
 
-    // ================= GETTERS & SETTERS =================
     public Long getId() {
         return id;
     }
 
-    public DuplicateRule getRule() {
-        return rule;
+    public Ticket getTicket() {
+        return ticket;
     }
 
-    public void setRule(DuplicateRule rule) {
-        this.rule = rule;
+    public void setTicket(Ticket ticket) {
+        this.ticket = ticket;
     }
 
-    public Ticket getBaseTicket() {
-        return baseTicket;
+    public String getMessage() {
+        return message;
     }
 
-    public void setBaseTicket(Ticket baseTicket) {
-        this.baseTicket = baseTicket;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
-    public Ticket getMatchedTicket() {
-        return matchedTicket;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setMatchedTicket(Ticket matchedTicket) {
-        this.matchedTicket = matchedTicket;
-    }
-
-    public Double getMatchScore() {
-        return matchScore;
-    }
-
-    public void setMatchScore(Double matchScore) {
-        this.matchScore = matchScore;
-    }
-
-    public LocalDateTime getDetectedAt() {
-        return detectedAt;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }
