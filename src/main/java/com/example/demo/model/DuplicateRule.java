@@ -2,6 +2,7 @@ package com.example.demo.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -17,7 +18,7 @@ public class DuplicateRule {
 
     @Column(name = "match_type", nullable = false)
     private String matchType;
-    // Allowed values: KEYWORD, SIMILARITY, EXACT_MATCH
+    // KEYWORD, SIMILARITY, EXACT_MATCH
 
     @Column(nullable = false)
     private Double threshold;
@@ -25,9 +26,12 @@ public class DuplicateRule {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    
+    // ================= FIX: ADD THIS FIELD =================
+    @OneToMany(mappedBy = "rule", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DuplicateDetectionLog> detectionLogs = new ArrayList<>();
 
-    
+    // ================= CONSTRUCTORS =================
+
     public DuplicateRule() {
     }
 
