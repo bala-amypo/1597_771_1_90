@@ -28,16 +28,11 @@ public class DuplicateDetectionServiceImpl implements DuplicateDetectionService 
     }
 
     // ================= DETECT DUPLICATES =================
-    @Override
-    public List<DuplicateDetectionLog> detectDuplicates(Long ticketId) {
+   @Override
+public List<DuplicateDetectionLog> getLogsForTicket(Long ticketId) {
+    return logRepository.findByBaseTicket_Id(ticketId);
+}
 
-        Ticket baseTicket = ticketRepository.findById(ticketId)
-                .orElseThrow(() -> new RuntimeException("Ticket not found"));
-
-        List<DuplicateRule> rules = ruleRepository.findAll();
-        if (rules.isEmpty()) {
-            return Collections.emptyList();
-        }
 
         List<Ticket> openTickets = ticketRepository.findByStatus("OPEN");
         List<DuplicateDetectionLog> createdLogs = new ArrayList<>();
