@@ -33,11 +33,8 @@ public class AuthController {
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new RuntimeException("Invalid credentials");
         }
+String token = jwtUtil.generateToken(user.getEmail());
 
-        String token = jwtUtil.generateToken(
-                user.getEmail(),
-                user.getRole()
-        );
 
         return new AuthResponse(
                 token,
