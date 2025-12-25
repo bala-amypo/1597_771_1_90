@@ -69,10 +69,8 @@ User user = userService.findByEmail(authRequest.getEmail())
         }
 
         // 3. Generate JWT token
-        String token = jwtUtil.generateToken(
-                user.getId(),
-                user.getEmail(),
-                user.getRole()
+       String token = jwtUtil.generateToken(user.getEmail(), user.getRole());
+
         );
 
         // 4. Build response DTO
