@@ -22,15 +22,17 @@ public class JwtUtil {
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
         this.expiration = expiration;
     }
+public String generateToken(Long userId, String email, String role) {
+    return Jwts.builder()
+            .setSubject(email)
+            .claim("userId", userId)
+            .claim("role", role)
+            .setIssuedAt(new Date())
+            .setExpiration(new Date(System.currentTimeMillis() + expiration))
+            .signWith(key)
+            .compact();
+}
 
-    public String generateToken(String email, String role) {
-        return Jwts.builder()
-                .setSubject(email)
-                .claim("role", role)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(key)
-                .compact();
     }
 
     public Claims validateToken(String token) {
