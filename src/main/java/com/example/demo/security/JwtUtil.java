@@ -21,14 +21,14 @@ public class JwtUtil {
             @Value("${jwt.secret}") String secret,
             @Value("${jwt.expiration}") long expiration
     ) {
+        // 🔴 FIXED: secret must be >= 32 chars
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
         this.expiration = expiration;
     }
 
-    // ✅ FIXED: accepts username + role
     public String generateToken(String username, String role) {
         return Jwts.builder()
-                .setSubject(username)                 // ✅ correct
+                .setSubject(username)
                 .addClaims(Map.of("role", role))
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
@@ -36,11 +36,10 @@ public class JwtUtil {
                 .compact();
     }
 
-    // ✅ REQUIRED by filter
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder()
-                    .setSigningKey(key)               // ✅ correct
+                    .setSigningKey(key)
                     .build()
                     .parseClaimsJws(token);
             return true;
