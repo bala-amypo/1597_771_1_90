@@ -2,45 +2,41 @@ package com.example.demo.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 @Component
 public class JwtUtil {
 
-    private final String secretKey;
-    private final long expirationMs;
+    private final SecretKey key;
+    private final long expiration;
 
     public JwtUtil(
-            @Value("${jwt.secret}") String secretKey,
-            @Value("${jwt.expiration}") long expirationMs) {
-        this.secretKey = secretKey;
-        this.expirationMs = expirationMs;
+            @Value("${jwt.secret}") String secret,
+            @Value("${jwt.expiration}") long expiration
+    ) {
+        this.key = Keys.hmacShaKeyFor(secret.getBytes());
+        this.expiration = expiration;
     }
 
-    public String generateToken(Long userId, String email, String role) {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("userId", userId);
-        claims.put("role", role);
-
+    public String generateToken(String email, String role) {
         return Jwts.builder()
-                .setClaims(claims)
                 .setSubject(email)
+                .claim("role", role)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + expirationMs))
-                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(key)
                 .compact();
     }
 
-    public Claims validateToken(String token) throws JwtException {
-        return Jwts.parser()
-                .setSigningKey(secretKey)
+    public Claims validateToken(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
                 .parseClaimsJws(token)
                 .getBody();
     }
