@@ -46,7 +46,9 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody AuthRequest authRequest) {
 
         // 1. Retrieve user by email
-        User user = userService.findByEmail(authRequest.getEmail());
+        
+User user = userService.findByEmail(authRequest.getEmail())
+        .orElseThrow(() -> new RuntimeException("User not found"));
 
         if (user == null) {
             return ResponseEntity
