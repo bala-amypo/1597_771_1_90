@@ -23,7 +23,6 @@
         <java.version>17</java.version>
     </properties>
 
-    <!-- SINGLE dependencies block -->
     <dependencies>
 
         <!-- Spring Boot Starters -->
@@ -86,7 +85,7 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- Servlet API (optional, provided by Spring Boot already) -->
+        <!-- Servlet API (provided) -->
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
@@ -94,11 +93,26 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- Jetty (optional, usually not needed for Spring Boot) -->
+        <!-- Jetty Servlet -->
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-servlet</artifactId>
             <version>11.0.20</version>
+        </dependency>
+
+        <!-- ADDED Jetty Server to fix UserIdentity error -->
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+            <version>11.0.20</version> <!-- ADDED -->
+        </dependency>
+
+        <!-- ADDED Jakarta Servlet API for Jetty 11 -->
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>5.0.0</version> <!-- ADDED -->
+            <scope>provided</scope>
         </dependency>
 
         <!-- Testing -->
