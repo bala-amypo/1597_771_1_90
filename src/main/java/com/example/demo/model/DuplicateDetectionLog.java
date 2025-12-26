@@ -1,9 +1,7 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-
 @Entity
-@Table(name = "duplicate_detection_logs")
 public class DuplicateDetectionLog {
 
     @Id
@@ -11,57 +9,26 @@ public class DuplicateDetectionLog {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "rule_id")
-    private DuplicateRule rule;
+    private Ticket ticket;
 
     @ManyToOne
-    @JoinColumn(name = "base_ticket_id")
-    private Ticket baseTicket;
+    private Ticket duplicateTicket;
 
-    @ManyToOne
-    @JoinColumn(name = "matched_ticket_id")
-    private Ticket matchedTicket;
+    private double matchScore;
 
-    private String reason;
+    private LocalDateTime detectedAt = LocalDateTime.now();
 
-    // Getters & Setters
-    public Long getId() {
-        return id;
+    public DuplicateDetectionLog() {}
+
+    public DuplicateDetectionLog(Ticket ticket, Ticket duplicateTicket, double matchScore) {
+        this.ticket = ticket;
+        this.duplicateTicket = duplicateTicket;
+        this.matchScore = matchScore;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public double getMatchScore() { return matchScore; }
+    public void setMatchScore(double matchScore) { this.matchScore = matchScore; }
 
-    public DuplicateRule getRule() {
-        return rule;
-    }
-
-    public void setRule(DuplicateRule rule) {
-        this.rule = rule;
-    }
-
-    public Ticket getBaseTicket() {
-        return baseTicket;
-    }
-
-    public void setBaseTicket(Ticket baseTicket) {
-        this.baseTicket = baseTicket;
-    }
-
-    public Ticket getMatchedTicket() {
-        return matchedTicket;
-    }
-
-    public void setMatchedTicket(Ticket matchedTicket) {
-        this.matchedTicket = matchedTicket;
-    }
-
-    public String getReason() {
-        return reason;
-    }
-
-    public void setReason(String reason) {
-        this.reason = reason;
-    }
+    public LocalDateTime getDetectedAt() { return detectedAt; }
 }
+
