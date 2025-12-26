@@ -1,4 +1,4 @@
-package com.example.demo.entity;
+package com.example.demo.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
@@ -11,54 +11,43 @@ public class DuplicateDetectionLog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long ticketId;
+    @ManyToOne
+    private Ticket ticket;
 
-    private Long duplicateTicketId;
+    @ManyToOne
+    private Ticket matchedTicket;
 
-    private Double similarityScore;
+    private Double matchScore;
 
     private LocalDateTime detectedAt;
 
+    public DuplicateDetectionLog() {}
+
+    public DuplicateDetectionLog(Ticket ticket, Ticket matchedTicket, Double matchScore) {
+        this.ticket = ticket;
+        this.matchedTicket = matchedTicket;
+        this.matchScore = matchScore;
+    }
+
     @PrePersist
     public void onCreate() {
-        this.detectedAt = LocalDateTime.now();
+        if (detectedAt == null) detectedAt = LocalDateTime.now();
     }
 
-    // ---------- getters & setters ----------
+    // ---- getters & setters ----
 
-    public Long getId() {
-        return id;
-    }    
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }    
+    public Ticket getTicket() { return ticket; }
+    public void setTicket(Ticket ticket) { this.ticket = ticket; }
 
-    public Long getTicketId() {
-        return ticketId;
-    }    
+    public Ticket getMatchedTicket() { return matchedTicket; }
+    public void setMatchedTicket(Ticket matchedTicket) { this.matchedTicket = matchedTicket; }
 
-    public void setTicketId(Long ticketId) {
-        this.ticketId = ticketId;
-    }    
+    public Double getMatchScore() { return matchScore; }
+    public void setMatchScore(Double matchScore) { this.matchScore = matchScore; }
 
-    public Long getDuplicateTicketId() {
-        return duplicateTicketId;
-    }    
-
-    public void setDuplicateTicketId(Long duplicateTicketId) {
-        this.duplicateTicketId = duplicateTicketId;
-    }
-
-    public Double getSimilarityScore() {
-        return similarityScore;
-    }    
-
-    public void setSimilarityScore(Double similarityScore) {
-        this.similarityScore = similarityScore;
-    }
-
-    public LocalDateTime getDetectedAt() {
-        return detectedAt;
-    }
+    public LocalDateTime getDetectedAt() { return detectedAt; }
+    public void setDetectedAt(LocalDateTime detectedAt) { this.detectedAt = detectedAt; }
 }
