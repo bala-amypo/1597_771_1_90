@@ -2,58 +2,39 @@ package com.example.demo.model;
 
 import jakarta.persistence.*;
 import java.util.List;
-
 @Entity
-@Table(name = "duplicate_rules")
 public class DuplicateRule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String ruleName;
-
-    @Column(nullable = false)
+    private String field;
+    private String matchType;
     private double threshold;
 
-    @OneToMany(mappedBy = "rule", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<DuplicateDetectionLog> detectionLogs;
-
-    // Constructors
     public DuplicateRule() {}
 
-    public DuplicateRule(String ruleName, double threshold) {
-        this.ruleName = ruleName;
+    public DuplicateRule(String field, double threshold) {
+        this.field = field;
         this.threshold = threshold;
     }
 
-    // Getters & Setters
-    public Long getId() {
-        return id;
-    }
-
-    public String getRuleName() {
-        return ruleName;
-    }
-
-    public void setRuleName(String ruleName) {
-        this.ruleName = ruleName;
-    }
-
-    public double getThreshold() {
-        return threshold;
-    }
-
-    public void setThreshold(double threshold) {
+    public DuplicateRule(String field, String matchType, double threshold) {
+        this.field = field;
+        this.matchType = matchType;
         this.threshold = threshold;
     }
 
-    public List<DuplicateDetectionLog> getDetectionLogs() {
-        return detectionLogs;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setDetectionLogs(List<DuplicateDetectionLog> detectionLogs) {
-        this.detectionLogs = detectionLogs;
-    }
+    public String getField() { return field; }
+    public void setField(String field) { this.field = field; }
+
+    public String getMatchType() { return matchType; }
+    public void setMatchType(String matchType) { this.matchType = matchType; }
+
+    public double getThreshold() { return threshold; }
+    public void setThreshold(double threshold) { this.threshold = threshold; }
 }
