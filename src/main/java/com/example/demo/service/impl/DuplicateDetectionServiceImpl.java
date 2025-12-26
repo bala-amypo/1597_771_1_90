@@ -1,17 +1,17 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.model.DuplicateDetectionLog;
-import com.example.demo.model.DuplicateRule;
-import com.example.demo.model.Ticket;
-import com.example.demo.repository.DuplicateDetectionLogRepository;
-import com.example.demo.repository.DuplicateRuleRepository;
-import com.example.demo.repository.TicketRepository;
+import com.example.demo.exception.NotFoundException;
+import com.example.demo.model.*;
+import com.example.demo.repository.*;
 import com.example.demo.service.DuplicateDetectionService;
 import com.example.demo.util.TextSimilarityUtil;
+import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class DuplicateDetectionServiceImpl implements DuplicateDetectionService {
 
     private final TicketRepository ticketRepository;
@@ -31,88 +31,75 @@ public class DuplicateDetectionServiceImpl implements DuplicateDetectionService 
     @Override
     public List<DuplicateDetectionLog> detectDuplicates(Long ticketId) {
 
-        Ticket baseTicket = ticketRepository.findById(ticketId)
-                .orElseThrow(() -> new RuntimeException("Ticket not found"));
+        Ticket base = ticketRepository.findById(ticketId)
+                .orElseThrow(() -> new NotFoundException("Ticket not found"));
 
         List<DuplicateRule> rules = ruleRepository.findAll();
         List<Ticket> openTickets = ticketRepository.findByStatus("OPEN");
 
-        List<DuplicateDetectionLog> logs = new ArrayList<>();
+        List<DuplicateDetectionLog> results = new ArrayList<>();
 
-        for (Ticket other : openTickets) {
+        for (DuplicateRule rule : rules) {
+            for (Ticket candidate : openTickets) {
 
-            // ✅ SKIP SELF (NULL SAFE)
-            if (baseTicket.getId() != null &&
-                other.getId() != null &&
-                baseTicket.getId().equals(other.getId())) {
-                continue;
-            }
+                if (candidate.getId().equals(base.getId())) continue;
 
-            for (DuplicateRule rule : rules) {
+                double score = 0.0;
+                boolean isDuplicate = false;
 
                 switch (rule.getMatchType()) {
-
                     case "EXACT_MATCH":
-                        if (exactMatch(baseTicket, other)) {
-                            logs.add(saveLog(baseTicket, other, 1.0));
+                        if (base.getSubject().equalsIgnoreCase(candidate.getSubject())) {
+                            score = 1.0;
+                            isDuplicate = true;
                         }
                         break;
 
                     case "KEYWORD":
-                        double keywordScore = keywordSimilarity(baseTicket, other);
-                        if (keywordScore >= rule.getThreshold()) {
-                            logs.add(saveLog(baseTicket, other, keywordScore));
-                        }
+                        String[] b = (base.getSubject() + " " + base.getDescription())
+                                .toLowerCase().split("\\W+");
+                        String[] c = (candidate.getSubject() + " " + candidate.getDescription())
+                                .toLowerCase().split("\\W+");
+
+                        int common = 0;
+                        for (String x : b)
+                            for (String y : c)
+                                if (!x.isBlank() && x.equals(y)) common++;
+
+                        score = (double) common / Math.max(1, b.length);
+                        isDuplicate = score >= rule.getThreshold();
                         break;
 
                     case "SIMILARITY":
-                        double simScore = similarity(baseTicket, other);
-                        if (simScore >= rule.getThreshold()) {
-                            logs.add(saveLog(baseTicket, other, simScore));
-                        }
+                        score = TextSimilarityUtil.similarity(
+                                base.getDescription(),
+                                candidate.getDescription()
+                        );
+                        isDuplicate = score >= rule.getThreshold();
                         break;
+                }
 
-                    default:
-                        break;
+                if (isDuplicate) {
+                    DuplicateDetectionLog log =
+                            new DuplicateDetectionLog(base, candidate, score);
+                    log.setDetectedAt(LocalDateTime.now());
+                    logRepository.save(log);
+                    results.add(log);
                 }
             }
         }
 
-        return logs;
-    }
-
-    private boolean exactMatch(Ticket a, Ticket b) {
-        if (a.getSubject() == null || b.getSubject() == null) {
-            return false;
-        }
-        // ✅ CASE INSENSITIVE (TEST REQUIRED)
-        return a.getSubject().equalsIgnoreCase(b.getSubject());
-    }
-
-    private double keywordSimilarity(Ticket a, Ticket b) {
-        String textA = safe(a.getSubject()) + " " + safe(a.getDescription());
-        String textB = safe(b.getSubject()) + " " + safe(b.getDescription());
-        return TextSimilarityUtil.similarity(textA, textB);
-    }
-
-    private double similarity(Ticket a, Ticket b) {
-        return TextSimilarityUtil.similarity(
-                safe(a.getDescription()),
-                safe(b.getDescription())
-        );
-    }
-
-    private String safe(String s) {
-        return s == null ? "" : s;
-    }
-
-    private DuplicateDetectionLog saveLog(Ticket base, Ticket other, double score) {
-        DuplicateDetectionLog log = new DuplicateDetectionLog(base, other, score);
-        return logRepository.save(log);
+        return results;
     }
 
     @Override
     public List<DuplicateDetectionLog> getLogsForTicket(Long ticketId) {
         return logRepository.findByTicket_Id(ticketId);
+    }
+
+    @Override
+    public DuplicateDetectionLog getLog(Long id) {
+        return logRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Log not found"));
     }
 }
