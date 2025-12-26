@@ -1,35 +1,34 @@
-package util;
+package com.example.demo.util;
 
+/**
+ * Utility class for text similarity calculation.
+ * Used by DuplicateDetectionService for SIMILARITY rules.
+ */
 public class TextSimilarityUtil {
 
-    // Simple method to calculate similarity using Levenshtein Distance
-    public static double similarity(String s1, String s2) {
-        if (s1 == null || s2 == null) return 0.0;
-
-        int distance = levenshteinDistance(s1, s2);
-        int maxLen = Math.max(s1.length(), s2.length());
-
-        if (maxLen == 0) return 1.0; // both strings empty
-        return 1.0 - ((double) distance / maxLen);
+    private TextSimilarityUtil() {
+        // utility class
     }
 
-    private static int levenshteinDistance(String s1, String s2) {
-        int[][] dp = new int[s1.length() + 1][s2.length() + 1];
-
-        for (int i = 0; i <= s1.length(); i++) dp[i][0] = i;
-        for (int j = 0; j <= s2.length(); j++) dp[0][j] = j;
-
-        for (int i = 1; i <= s1.length(); i++) {
-            for (int j = 1; j <= s2.length(); j++) {
-                if (s1.charAt(i - 1) == s2.charAt(j - 1)) {
-                    dp[i][j] = dp[i - 1][j - 1];
-                } else {
-                    dp[i][j] = 1 + Math.min(dp[i - 1][j - 1],
-                                   Math.min(dp[i - 1][j], dp[i][j - 1]));
-                }
-            }
+    /**
+     * Returns a similarity score between 0.0 and 1.0
+     */
+    public static double similarity(String text1, String text2) {
+        if (text1 == null || text2 == null) {
+            return 0.0;
         }
 
-        return dp[s1.length()][s2.length()];
+        text1 = text1.toLowerCase();
+        text2 = text2.toLowerCase();
+
+        if (text1.equals(text2)) {
+            return 1.0;
+        }
+
+        // Simple fallback similarity
+        int maxLength = Math.max(text1.length(), text2.length());
+        int minLength = Math.min(text1.length(), text2.length());
+
+        return maxLength == 0 ? 1.0 : (double) minLength / maxLength;
     }
 }
