@@ -2,8 +2,6 @@ package com.example.demo.controller;
 
 import com.example.demo.model.DuplicateRule;
 import com.example.demo.service.DuplicateRuleService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,32 +10,24 @@ import java.util.List;
 @RequestMapping("/api/rules")
 public class DuplicateRuleController {
 
-    private final DuplicateRuleService duplicateRuleService;
+    private final DuplicateRuleService ruleService;
 
-    // ✅ Constructor injection
-    public DuplicateRuleController(DuplicateRuleService duplicateRuleService) {
-        this.duplicateRuleService = duplicateRuleService;
+    public DuplicateRuleController(DuplicateRuleService ruleService) {
+        this.ruleService = ruleService;
     }
 
-    // ================= CREATE RULE =================
-    // POST /api/rules
     @PostMapping
-    public ResponseEntity<DuplicateRule> createRule(@RequestBody DuplicateRule rule) {
-        DuplicateRule savedRule = duplicateRuleService.createRule(rule);
-        return new ResponseEntity<>(savedRule, HttpStatus.CREATED);
+    public DuplicateRule create(@RequestBody DuplicateRule rule) {
+        return ruleService.createRule(rule);
     }
 
-    // ================= GET ALL RULES =================
-    // GET /api/rules
     @GetMapping
-    public ResponseEntity<List<DuplicateRule>> getAllRules() {
-        return ResponseEntity.ok(duplicateRuleService.getAllRules());
+    public List<DuplicateRule> getAll() {
+        return ruleService.getAllRules();
     }
 
-    // ================= GET RULE BY ID =================
-    // GET /api/rules/{id}
     @GetMapping("/{id}")
-    public ResponseEntity<DuplicateRule> getRule(@PathVariable Long id) {
-        return ResponseEntity.ok(duplicateRuleService.getRule(id));
+    public DuplicateRule get(@PathVariable Long id) {
+        return ruleService.getRule(id);
     }
 }

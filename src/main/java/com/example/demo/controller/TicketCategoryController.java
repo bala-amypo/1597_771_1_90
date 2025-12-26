@@ -1,13 +1,10 @@
 package com.example.demo.controller;
 
-import java.util.List;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import com.example.demo.model.TicketCategory;
 import com.example.demo.service.TicketCategoryService;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/categories")
@@ -19,23 +16,18 @@ public class TicketCategoryController {
         this.categoryService = categoryService;
     }
 
-    // Create a new category
     @PostMapping
-    public ResponseEntity<TicketCategory> createCategory(@RequestBody TicketCategory category) {
-        TicketCategory createdCategory = categoryService.createCategory(category);
-        return new ResponseEntity<>(createdCategory, HttpStatus.CREATED);
+    public TicketCategory create(@RequestBody TicketCategory category) {
+        return categoryService.createCategory(category);
     }
 
-    // Get all categories
     @GetMapping
-    public ResponseEntity<List<TicketCategory>> getAllCategories() {
-        return ResponseEntity.ok(categoryService.getAllCategories());
+    public List<TicketCategory> getAll() {
+        return categoryService.getAllCategories();
     }
 
-    // Get category by ID
     @GetMapping("/{id}")
-    public ResponseEntity<TicketCategory> getCategory(@PathVariable Long id) {
-        TicketCategory category = categoryService.getCategory(id);
-        return ResponseEntity.ok(category);
+    public TicketCategory get(@PathVariable Long id) {
+        return categoryService.getCategory(id);
     }
 }

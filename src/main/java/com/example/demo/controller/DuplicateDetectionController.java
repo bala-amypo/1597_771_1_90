@@ -1,33 +1,33 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.DuplicateRule;
-import com.example.demo.service.DuplicateRuleService;
+import com.example.demo.model.DuplicateDetectionLog;
+import com.example.demo.service.DuplicateDetectionService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/duplicate-rules")
+@RequestMapping("/api/detection")
 public class DuplicateDetectionController {
 
-    private final DuplicateRuleService ruleService;
+    private final DuplicateDetectionService detectionService;
 
-    public DuplicateDetectionController(DuplicateRuleService ruleService) {
-        this.ruleService = ruleService;
+    public DuplicateDetectionController(DuplicateDetectionService detectionService) {
+        this.detectionService = detectionService;
     }
 
-    @PostMapping
-    public DuplicateRule createRule(@RequestBody DuplicateRule rule) {
-        return ruleService.createRule(rule);
+    @GetMapping("/run/{ticketId}")
+    public List<DuplicateDetectionLog> run(@PathVariable Long ticketId) {
+        return detectionService.detectDuplicates(ticketId);
     }
 
-    @GetMapping
-    public List<DuplicateRule> getAllRules() {
-        return ruleService.getAllRules();
+    @GetMapping("/ticket/{ticketId}")
+    public List<DuplicateDetectionLog> logsForTicket(@PathVariable Long ticketId) {
+        return detectionService.getLogsForTicket(ticketId);
     }
 
     @GetMapping("/{id}")
-    public DuplicateRule getRule(@PathVariable Long id) {
-        return ruleService.getRule(id);
+    public DuplicateDetectionLog get(@PathVariable Long id) {
+        return detectionService.getLog(id);
     }
 }
