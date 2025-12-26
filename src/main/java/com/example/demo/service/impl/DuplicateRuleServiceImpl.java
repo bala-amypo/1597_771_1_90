@@ -1,11 +1,12 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.DuplicateRule;
 import com.example.demo.repository.DuplicateRuleRepository;
 import com.example.demo.service.DuplicateRuleService;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -19,12 +20,17 @@ public class DuplicateRuleServiceImpl implements DuplicateRuleService {
 
     @Override
     public DuplicateRule createRule(DuplicateRule rule) {
-        ruleRepository.findByRuleName(rule.getRuleName()).ifPresent(r -> {
-            throw new IllegalArgumentException("Rule already exists");
-        });
+
+        if (ruleRepository.findByRuleName(rule.getRuleName()).isPresent()) {
+            throw new IllegalArgumentException("exists");
+        }
 
         if (rule.getThreshold() < 0.0 || rule.getThreshold() > 1.0) {
-            throw new IllegalArgumentException("Threshold must be between 0.0 and 1.0");
+            throw new IllegalArgumentException("Invalid threshold");
+        }
+
+        if (rule.getCreatedAt() == null) {
+            rule.setCreatedAt(LocalDateTime.now());
         }
 
         return ruleRepository.save(rule);
@@ -38,6 +44,6 @@ public class DuplicateRuleServiceImpl implements DuplicateRuleService {
     @Override
     public DuplicateRule getRule(Long id) {
         return ruleRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Rule not found"));
+                .orElseThrow(() -> new NotFoundException("Rule not found"));
     }
 }

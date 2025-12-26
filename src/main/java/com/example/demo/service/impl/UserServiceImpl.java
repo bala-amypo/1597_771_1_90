@@ -1,49 +1,49 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.exception.NotFoundException;
-import com.example.demo.model.DuplicateRule;
-import com.example.demo.repository.DuplicateRuleRepository;
-import com.example.demo.service.DuplicateRuleService;
+import com.example.demo.model.User;
+import com.example.demo.repository.UserRepository;
+import com.example.demo.service.UserService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class DuplicateRuleServiceImpl implements DuplicateRuleService {
+public class UserServiceImpl implements UserService {
 
-    private final DuplicateRuleRepository ruleRepository;
+    private final UserRepository userRepository;
 
-    public DuplicateRuleServiceImpl(DuplicateRuleRepository ruleRepository) {
-        this.ruleRepository = ruleRepository;
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
-    public DuplicateRule createRule(DuplicateRule rule) {
+    public User registerUser(User user) {
 
-        if (ruleRepository.findByRuleName(rule.getRuleName()).isPresent()) {
-            throw new IllegalArgumentException("rule already exists");
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new IllegalArgumentException("email already exists");
         }
 
-        if (rule.getThreshold() < 0.0 || rule.getThreshold() > 1.0) {
-            throw new IllegalArgumentException("Invalid threshold");
+        if (user.getPassword() == null || user.getPassword().length() < 8) {
+            throw new IllegalArgumentException("Password must be at least 8 characters");
         }
 
-        if (rule.getCreatedAt() == null) {
-            rule.setCreatedAt(LocalDateTime.now());
-        }
+        if (user.getRole() == null) user.setRole("USER");
 
-        return ruleRepository.save(rule);
+        if (user.getCreatedAt() == null) user.setCreatedAt(LocalDateTime.now());
+
+        return userRepository.save(user);
     }
 
     @Override
-    public List<DuplicateRule> getAllRules() {
-        return ruleRepository.findAll();
+    public User getUser(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User not found"));
     }
 
     @Override
-    public DuplicateRule getRule(Long id) {
-        return ruleRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Rule not found"));
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 }
