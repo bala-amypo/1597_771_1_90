@@ -1,6 +1,8 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
+
 @Entity
 public class DuplicateDetectionLog {
 
@@ -18,7 +20,8 @@ public class DuplicateDetectionLog {
 
     private LocalDateTime detectedAt = LocalDateTime.now();
 
-    public DuplicateDetectionLog() {}
+    public DuplicateDetectionLog() {
+    }
 
     public DuplicateDetectionLog(Ticket ticket, Ticket duplicateTicket, double matchScore) {
         this.ticket = ticket;
@@ -26,9 +29,15 @@ public class DuplicateDetectionLog {
         this.matchScore = matchScore;
     }
 
-    public double getMatchScore() { return matchScore; }
-    public void setMatchScore(double matchScore) { this.matchScore = matchScore; }
+    public double getMatchScore() {
+        return matchScore;
+    }
 
-    public LocalDateTime getDetectedAt() { return detectedAt; }
+    public void setMatchScore(double matchScore) {
+        this.matchScore = matchScore;
+    }
+
+    public LocalDateTime getDetectedAt() {
+        return detectedAt;
+    }
 }
-
