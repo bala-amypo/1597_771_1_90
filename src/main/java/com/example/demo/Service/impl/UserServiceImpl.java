@@ -1,40 +1,49 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.model.User;
-import com.example.demo.repository.UserRepository;
-import com.example.demo.service.UserService;
+import com.example.demo.exception.NotFoundException;
+import com.example.demo.model.DuplicateRule;
+import com.example.demo.repository.DuplicateRuleRepository;
+import com.example.demo.service.DuplicateRuleService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class DuplicateRuleServiceImpl implements DuplicateRuleService {
 
-    private final UserRepository userRepository;
+    private final DuplicateRuleRepository ruleRepository;
 
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public DuplicateRuleServiceImpl(DuplicateRuleRepository ruleRepository) {
+        this.ruleRepository = ruleRepository;
     }
 
     @Override
-    public User registerUser(User user) {
-        return userRepository.save(user);
+    public DuplicateRule createRule(DuplicateRule rule) {
+
+        if (ruleRepository.findByRuleName(rule.getRuleName()).isPresent()) {
+            throw new IllegalArgumentException("rule already exists");
+        }
+
+        if (rule.getThreshold() < 0.0 || rule.getThreshold() > 1.0) {
+            throw new IllegalArgumentException("Invalid threshold");
+        }
+
+        if (rule.getCreatedAt() == null) {
+            rule.setCreatedAt(LocalDateTime.now());
+        }
+
+        return ruleRepository.save(rule);
     }
 
     @Override
-    public Optional<User> findByEmail(String email) {
-        return userRepository.findByEmail(email);
+    public List<DuplicateRule> getAllRules() {
+        return ruleRepository.findAll();
     }
 
     @Override
-    public User getUser(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-    }
-
-    @Override
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public DuplicateRule getRule(Long id) {
+        return ruleRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Rule not found"));
     }
 }

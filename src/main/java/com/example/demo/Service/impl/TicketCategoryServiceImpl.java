@@ -1,13 +1,13 @@
 package com.example.demo.service.impl;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-
+import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.TicketCategory;
 import com.example.demo.repository.TicketCategoryRepository;
 import com.example.demo.service.TicketCategoryService;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class TicketCategoryServiceImpl implements TicketCategoryService {
@@ -21,12 +21,10 @@ public class TicketCategoryServiceImpl implements TicketCategoryService {
     @Override
     public TicketCategory createCategory(TicketCategory category) {
 
-        // check duplicate category name
         if (categoryRepository.existsByCategoryName(category.getCategoryName())) {
-            throw new IllegalArgumentException("Category already exists");
+            throw new IllegalArgumentException("category already exists");
         }
 
-        // set createdAt if not set
         if (category.getCreatedAt() == null) {
             category.setCreatedAt(LocalDateTime.now());
         }
@@ -42,6 +40,6 @@ public class TicketCategoryServiceImpl implements TicketCategoryService {
     @Override
     public TicketCategory getCategory(Long id) {
         return categoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Category not found"));
+                .orElseThrow(() -> new NotFoundException("Category not found"));
     }
 }
