@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "duplicate_detection_logs")
 public class DuplicateDetectionLog {
 
     @Id
@@ -14,30 +15,39 @@ public class DuplicateDetectionLog {
     private Ticket ticket;
 
     @ManyToOne
-    private Ticket duplicateTicket;
+    private Ticket matchedTicket;
 
-    private double matchScore;
+    private Double matchScore;
 
-    private LocalDateTime detectedAt = LocalDateTime.now();
+    private LocalDateTime detectedAt;
 
-    public DuplicateDetectionLog() {
-    }
+    public DuplicateDetectionLog() {}
 
-    public DuplicateDetectionLog(Ticket ticket, Ticket duplicateTicket, double matchScore) {
+    public DuplicateDetectionLog(Ticket ticket, Ticket matchedTicket, Double matchScore) {
         this.ticket = ticket;
-        this.duplicateTicket = duplicateTicket;
+        this.matchedTicket = matchedTicket;
         this.matchScore = matchScore;
     }
 
-    public double getMatchScore() {
-        return matchScore;
+    @PrePersist
+    public void onCreate() {
+        if (detectedAt == null) detectedAt = LocalDateTime.now();
     }
 
-    public void setMatchScore(double matchScore) {
-        this.matchScore = matchScore;
-    }
+    // ---- getters & setters ----
 
-    public LocalDateTime getDetectedAt() {
-        return detectedAt;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public Ticket getTicket() { return ticket; }
+    public void setTicket(Ticket ticket) { this.ticket = ticket; }
+
+    public Ticket getMatchedTicket() { return matchedTicket; }
+    public void setMatchedTicket(Ticket matchedTicket) { this.matchedTicket = matchedTicket; }
+
+    public Double getMatchScore() { return matchScore; }
+    public void setMatchScore(Double matchScore) { this.matchScore = matchScore; }
+
+    public LocalDateTime getDetectedAt() { return detectedAt; }
+    public void setDetectedAt(LocalDateTime detectedAt) { this.detectedAt = detectedAt; }
 }

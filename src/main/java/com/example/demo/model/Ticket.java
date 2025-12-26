@@ -13,25 +13,35 @@ public class Ticket {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "category_id")
     private TicketCategory category;
 
     private String subject;
+
+    @Column(length = 2000)
     private String description;
-    private String status;
+
+    private String status = "OPEN";
+
     private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "baseTicket", cascade = CascadeType.ALL)
-    private List<DuplicateDetectionLog> baseDuplicateLogs;
+    @OneToMany(mappedBy = "ticket")
+    private List<DuplicateDetectionLog> baseLogs;
 
-    @OneToMany(mappedBy = "matchedTicket", cascade = CascadeType.ALL)
-    private List<DuplicateDetectionLog> matchedDuplicateLogs;
+    @OneToMany(mappedBy = "matchedTicket")
+    private List<DuplicateDetectionLog> matchedLogs;
 
-    // --- Getters & Setters ---
+    public Ticket() {}
+
+    @PrePersist
+    public void onCreate() {
+        if (createdAt == null) createdAt = LocalDateTime.now();
+        if (status == null) status = "OPEN";
+    }
+
+    // ---- getters & setters ----
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -54,9 +64,9 @@ public class Ticket {
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 
-    public List<DuplicateDetectionLog> getBaseDuplicateLogs() { return baseDuplicateLogs; }
-    public void setBaseDuplicateLogs(List<DuplicateDetectionLog> baseDuplicateLogs) { this.baseDuplicateLogs = baseDuplicateLogs; }
+    public List<DuplicateDetectionLog> getBaseLogs() { return baseLogs; }
+    public void setBaseLogs(List<DuplicateDetectionLog> baseLogs) { this.baseLogs = baseLogs; }
 
-    public List<DuplicateDetectionLog> getMatchedDuplicateLogs() { return matchedDuplicateLogs; }
-    public void setMatchedDuplicateLogs(List<DuplicateDetectionLog> matchedDuplicateLogs) { this.matchedDuplicateLogs = matchedDuplicateLogs; }
+    public List<DuplicateDetectionLog> getMatchedLogs() { return matchedLogs; }
+    public void setMatchedLogs(List<DuplicateDetectionLog> matchedLogs) { this.matchedLogs = matchedLogs; }
 }
