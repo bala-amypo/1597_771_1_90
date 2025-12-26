@@ -1,104 +1,46 @@
 package com.example.demo.model;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
-
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
 public class User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @NotBlank
     private String fullName;
-
-    @Email
-    @NotBlank
     private String email;
-
-    @NotBlank
-    @Size(min = 8)
     private String password;
-
     private String role;
-
     private LocalDateTime createdAt;
 
     public User() {
+        this.createdAt = LocalDateTime.now();
+        this.role = "USER";
     }
 
     public User(String fullName, String email, String password, String role) {
         this.fullName = fullName;
         this.email = email;
         this.password = password;
-        this.role = role;
-    }
-
-    @PrePersist
-    public void prePersist() {
-        if (this.role == null) {
-            this.role = "USER";
-        }
+        this.role = (role == null || role.isBlank()) ? "USER" : role;
         this.createdAt = LocalDateTime.now();
     }
 
-    // ===== GETTERS =====
+    // getters & setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public Long getId() {
-        return id;
-    }
+    public String getFullName() { return fullName; }
+    public void setFullName(String fullName) { this.fullName = fullName; }
 
-    public String getFullName() {
-        return fullName;
-    }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
-    public String getEmail() {
-        return email;
-    }
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    // ===== ✅ MISSING SETTERS (FIX) =====
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    // ✅ REQUIRED BY UserServiceImpl
+    public String getRole() { return role; }
     public void setRole(String role) {
-        this.role = role;
+        this.role = (role == null || role.isBlank()) ? "USER" : role;
     }
 
-    // ✅ REQUIRED BY UserServiceImpl
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
+    public LocalDateTime getCreatedAt() { return createdAt; }
 }
