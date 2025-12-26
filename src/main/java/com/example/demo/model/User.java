@@ -48,6 +48,8 @@ public class User {
         this.createdAt = LocalDateTime.now();
     }
 
+    // ===== GETTERS =====
+
     public Long getId() {
         return id;
     }
@@ -70,5 +72,33 @@ public class User {
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
+    }
+
+    // ===== ✅ MISSING SETTERS (FIX) =====
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    // ✅ REQUIRED BY UserServiceImpl
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    // ✅ REQUIRED BY UserServiceImpl
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }
