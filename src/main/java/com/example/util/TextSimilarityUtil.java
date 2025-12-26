@@ -1,34 +1,39 @@
 package com.example.demo.util;
 
-/**
- * Utility class for text similarity calculation.
- * Used by DuplicateDetectionService for SIMILARITY rules.
- */
+import java.util.HashSet;
+import java.util.Set;
+
 public class TextSimilarityUtil {
 
-    private TextSimilarityUtil() {
-        // utility class
-    }
+    public static double similarity(String a, String b) {
 
-    /**
-     * Returns a similarity score between 0.0 and 1.0
-     */
-    public static double similarity(String text1, String text2) {
-        if (text1 == null || text2 == null) {
+        if (a == null || b == null) {
             return 0.0;
         }
 
-        text1 = text1.toLowerCase();
-        text2 = text2.toLowerCase();
+        String[] wordsA = a.toLowerCase().split("\\W+");
+        String[] wordsB = b.toLowerCase().split("\\W+");
 
-        if (text1.equals(text2)) {
-            return 1.0;
+        Set<String> setA = new HashSet<>();
+        Set<String> setB = new HashSet<>();
+
+        for (String w : wordsA) {
+            if (!w.isBlank()) setA.add(w);
         }
 
-        // Simple fallback similarity
-        int maxLength = Math.max(text1.length(), text2.length());
-        int minLength = Math.min(text1.length(), text2.length());
+        for (String w : wordsB) {
+            if (!w.isBlank()) setB.add(w);
+        }
 
-        return maxLength == 0 ? 1.0 : (double) minLength / maxLength;
+        if (setA.isEmpty() && setB.isEmpty()) return 1.0;
+        if (setA.isEmpty() || setB.isEmpty()) return 0.0;
+
+        Set<String> intersection = new HashSet<>(setA);
+        intersection.retainAll(setB);
+
+        Set<String> union = new HashSet<>(setA);
+        union.addAll(setB);
+
+        return (double) intersection.size() / union.size();
     }
 }
