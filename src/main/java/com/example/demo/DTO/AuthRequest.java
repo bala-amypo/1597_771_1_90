@@ -5,17 +5,13 @@ public class AuthRequest {
     private String email;
     private String password;
 
-    // No-arg constructor
-    public AuthRequest() {
-    }
+    public AuthRequest() {}
 
-    // Parameterized constructor
     public AuthRequest(String email, String password) {
         this.email = email;
         this.password = password;
     }
 
-    // Getters and Setters
     public String getEmail() {
         return email;
     }
