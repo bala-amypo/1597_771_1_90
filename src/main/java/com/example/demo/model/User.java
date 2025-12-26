@@ -48,8 +48,6 @@ public class User {
         this.createdAt = LocalDateTime.now();
     }
 
-    // getters & setters
-
     public Long getId() {
         return id;
     }
@@ -89,12 +87,12 @@ public class User {
     public void setRole(String role) {
         this.role = role;
     }
+
     public LocalDateTime getCreatedAt() {
-    return createdAt;
-}
+        return createdAt;
+    }
 
-public void setCreatedAt(LocalDateTime createdAt) {
-    this.createdAt = createdAt;
-}
-
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
 }
