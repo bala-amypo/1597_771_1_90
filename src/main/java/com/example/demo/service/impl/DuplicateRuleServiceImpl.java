@@ -11,7 +11,6 @@ import java.util.List;
 
 @Service
 public class DuplicateRuleServiceImpl implements DuplicateRuleService {
-
     private final DuplicateRuleRepository ruleRepository;
 
     public DuplicateRuleServiceImpl(DuplicateRuleRepository ruleRepository) {
@@ -20,30 +19,29 @@ public class DuplicateRuleServiceImpl implements DuplicateRuleService {
 
     @Override
     public DuplicateRule createRule(DuplicateRule rule) {
-
+        if (rule.getRuleName() == null || rule.getRuleName().isBlank()) {
+            throw new IllegalArgumentException("Rule name is required");
+        }
         if (ruleRepository.findByRuleName(rule.getRuleName()).isPresent()) {
-            throw new IllegalArgumentException("exists");
+            throw new IllegalArgumentException("Rule with this name already exists");
         }
-
-        if (rule.getThreshold() < 0.0 || rule.getThreshold() > 1.0) {
-            throw new IllegalArgumentException("Invalid threshold");
+        if (rule.getThreshold() == null || rule.getThreshold() < 0.0 || rule.getThreshold() > 1.0) {
+            throw new IllegalArgumentException("Threshold must be between 0.0 and 1.0");
         }
-
         if (rule.getCreatedAt() == null) {
             rule.setCreatedAt(LocalDateTime.now());
         }
-
         return ruleRepository.save(rule);
-    }
-
-    @Override
-    public List<DuplicateRule> getAllRules() {
-        return ruleRepository.findAll();
     }
 
     @Override
     public DuplicateRule getRule(Long id) {
         return ruleRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Rule not found"));
+            .orElseThrow(() -> new NotFoundException("Rule not found"));
+    }
+
+    @Override
+    public List<DuplicateRule> getAllRules() {
+        return ruleRepository.findAll();
     }
 }

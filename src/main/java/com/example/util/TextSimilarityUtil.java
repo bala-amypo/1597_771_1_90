@@ -1,39 +1,25 @@
 package com.example.demo.util;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
-public class TextSimilarityUtil {
+public final class TextSimilarityUtil {
+    private TextSimilarityUtil() {}
 
+    // Simple Jaccard similarity on case-insensitive tokens
     public static double similarity(String a, String b) {
-
-        if (a == null || b == null) {
-            return 0.0;
-        }
-
-        String[] wordsA = a.toLowerCase().split("\\W+");
-        String[] wordsB = b.toLowerCase().split("\\W+");
-
-        Set<String> setA = new HashSet<>();
-        Set<String> setB = new HashSet<>();
-
-        for (String w : wordsA) {
-            if (!w.isBlank()) setA.add(w);
-        }
-
-        for (String w : wordsB) {
-            if (!w.isBlank()) setB.add(w);
-        }
-
-        if (setA.isEmpty() && setB.isEmpty()) return 1.0;
-        if (setA.isEmpty() || setB.isEmpty()) return 0.0;
-
-        Set<String> intersection = new HashSet<>(setA);
-        intersection.retainAll(setB);
-
-        Set<String> union = new HashSet<>(setA);
-        union.addAll(setB);
-
-        return (double) intersection.size() / union.size();
+        if (a == null || b == null) return 0.0;
+        String as = a.trim();
+        String bs = b.trim();
+        if (as.isEmpty() || bs.isEmpty()) return 0.0;
+        Set<String> sa = new HashSet<>();
+        for (String s : as.toLowerCase().split("\\s+")) if (!s.isBlank()) sa.add(s);
+        Set<String> sb = new HashSet<>();
+        for (String s : bs.toLowerCase().split("\\s+")) if (!s.isBlank()) sb.add(s);
+        if (sa.isEmpty() || sb.isEmpty()) return 0.0;
+        Set<String> inter = new HashSet<>(sa);
+        inter.retainAll(sb);
+        Set<String> union = new HashSet<>(sa);
+        union.addAll(sb);
+        return union.isEmpty() ? 0.0 : ((double) inter.size()) / union.size();
     }
 }

@@ -11,7 +11,6 @@ import java.util.List;
 
 @Service
 public class TicketCategoryServiceImpl implements TicketCategoryService {
-
     private final TicketCategoryRepository categoryRepository;
 
     public TicketCategoryServiceImpl(TicketCategoryRepository categoryRepository) {
@@ -20,26 +19,26 @@ public class TicketCategoryServiceImpl implements TicketCategoryService {
 
     @Override
     public TicketCategory createCategory(TicketCategory category) {
-
-        if (categoryRepository.existsByCategoryName(category.getCategoryName())) {
-            throw new IllegalArgumentException("category already exists");
+        if (category == null || category.getCategoryName() == null || category.getCategoryName().isBlank()) {
+            throw new IllegalArgumentException("Category name is required");
         }
-
+        if (categoryRepository.existsByCategoryName(category.getCategoryName())) {
+            throw new IllegalArgumentException("Category already exists");
+        }
         if (category.getCreatedAt() == null) {
             category.setCreatedAt(LocalDateTime.now());
         }
-
         return categoryRepository.save(category);
-    }
-
-    @Override
-    public List<TicketCategory> getAllCategories() {
-        return categoryRepository.findAll();
     }
 
     @Override
     public TicketCategory getCategory(Long id) {
         return categoryRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Category not found"));
+            .orElseThrow(() -> new NotFoundException("Category not found"));
+    }
+
+    @Override
+    public List<TicketCategory> getAllCategories() {
+        return categoryRepository.findAll();
     }
 }
