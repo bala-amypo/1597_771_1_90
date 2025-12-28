@@ -26,28 +26,25 @@ public class SecurityConfig {
         this.jwtFilter = jwtFilter;
     }
 
-    // ✅ Password encoder
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // ✅ Authentication manager
     @Bean
     public AuthenticationManager authenticationManager(
             AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
 
-    // ✅ MAIN SECURITY CONFIG
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-            // ✅ ENABLE CORS
+            // ✅ Enable CORS
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
 
-            // ❌ CSRF disabled (JWT based auth)
+            // ❌ Disable CSRF (JWT based)
             .csrf(csrf -> csrf.disable())
 
             // ✅ Stateless session
@@ -56,33 +53,33 @@ public class SecurityConfig {
 
             // ✅ Authorization rules
             .authorizeHttpRequests(auth -> auth
-                    // Public endpoints
+                    // PUBLIC endpoints
                     .requestMatchers(
                             "/auth/**",
+                            "/api/users/register",
                             "/swagger-ui/**",
-                            "/v3/api-docs/**",
-                            "/swagger-ui.html"
+                            "/swagger-ui.html",
+                            "/v3/api-docs/**"
                     ).permitAll()
 
-                    // Protected APIs
+                    // PROTECTED endpoints
                     .requestMatchers("/api/**").authenticated()
 
-                    // Allow everything else
+                    // Everything else
                     .anyRequest().permitAll()
             );
 
-        // ✅ JWT Filter
+        // ✅ JWT filter
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
-    // ✅ GLOBAL CORS CONFIGURATION
+    // ✅ GLOBAL CORS CONFIG
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
 
         CorsConfiguration config = new CorsConfiguration();
-
         config.setAllowedOriginPatterns(List.of("*"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
@@ -90,8 +87,8 @@ public class SecurityConfig {
 
         UrlBasedCorsConfigurationSource source =
                 new UrlBasedCorsConfigurationSource();
-
         source.registerCorsConfiguration("/**", config);
+
         return source;
     }
 }
